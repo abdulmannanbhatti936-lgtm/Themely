@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A11y Lab – WCAG 2.1 AA Learning Tool</title>
+<!-- Applies the saved theme before first paint so the wrong theme never flashes -->
+<script>try{var t=localStorage.getItem('a11y-lab-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="css/app.css?v=3">
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<header>
+  <h1>A11y Lab</h1>
+  <nav aria-label="Settings" class="tools">
+    <label for="theme">Theme</label>
+    <select id="theme">
+      <option value="auto">System</option><option value="light">Light</option>
+      <option value="dark">Dark</option><option value="hc">High contrast</option>
+    </select>
+    <button id="themeToggle" type="button" aria-pressed="false">
+      <span class="sw" aria-hidden="true"></span>Dark mode
+    </button>
+  </nav>
+</header>
+
+<main id="main" tabindex="-1">
+  <div role="tablist" aria-label="Lab modules" id="mainTabs">
+    <button role="tab" id="t1" aria-selected="true" aria-controls="p1">1 Keyboard &amp; SR</button>
+    <button role="tab" id="t2" aria-selected="false" tabindex="-1" aria-controls="p2">2 Contrast &amp; Zoom</button>
+    <button role="tab" id="t3" aria-selected="false" tabindex="-1" aria-controls="p3">3 Remediation</button>
+    <button role="tab" id="t4" aria-selected="false" tabindex="-1" aria-controls="p4">4 Audit</button>
+  </div>
+
+  <!-- ============ MODULE 1 ============ -->
+  <section id="p1" role="tabpanel" aria-labelledby="t1">
+    <h2>Keyboard &amp; Screen Reader Lab</h2>
+    <label><input type="checkbox" id="insp"> ARIA Inspector (outline + show roles/states)</label>
+
+    <section class="card"><h3>Tabs</h3>
+      <p>Test: Tab into the list, then Arrow keys, Home, End. Uses tablist/tab/tabpanel, aria-selected, aria-controls, roving tabindex.</p>
+      <div role="tablist" aria-label="Demo tabs">
+        <button role="tab" id="d1" aria-selected="true" aria-controls="dp1">One</button>
+        <button role="tab" id="d2" aria-selected="false" tabindex="-1" aria-controls="dp2">Two</button>
+      </div>
+      <div role="tabpanel" id="dp1" aria-labelledby="d1" tabindex="0">Panel one</div>
+      <div role="tabpanel" id="dp2" aria-labelledby="d2" tabindex="0" hidden>Panel two</div>
+    </section>
+
+    <section class="card"><h3>Accordion</h3>
+      <p>Test: Enter/Space toggles. Uses button + aria-expanded + aria-controls.</p>
+      <div class="acc">
+        <h4><button aria-expanded="false" aria-controls="a1">What is WCAG?</button></h4>
+        <div id="a1" hidden>Web Content Accessibility Guidelines, a W3C standard.</div>
+        <h4><button aria-expanded="false" aria-controls="a2">What is level AA?</button></h4>
+        <div id="a2" hidden>The mid conformance level most laws require.</div>
+      </div>
+    </section>
+
+    <section class="card"><h3>Modal dialog</h3>
+      <p>Test: open, Tab (focus stays inside), Esc closes, focus returns here. Uses role=dialog, aria-modal, aria-labelledby/describedby.</p>
+      <button id="od" type="button">Open dialog</button>
+    </section>
+
+    <section class="card"><h3>Dropdown menu</h3>
+      <p>Test: Enter or ArrowDown opens; arrows, Home/End move; Esc closes. Uses aria-haspopup, aria-expanded, role=menu/menuitem.</p>
+      <button id="mb" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="ml">Actions</button>
+      <ul id="ml" role="menu" aria-label="Actions" hidden>
+        <li role="none"><button role="menuitem" tabindex="-1" type="button">Copy</button></li>
+        <li role="none"><button role="menuitem" tabindex="-1" type="button">Rename</button></li>
+        <li role="none"><button role="menuitem" tabindex="-1" type="button">Delete</button></li>
+      </ul>
+    </section>
+
+    <section class="card"><h3>Form with validation</h3>
+      <p>Test: submit empty. Focus jumps to the error summary; links go to fields.</p>
+      <form id="f" novalidate>
+        <div id="es" class="summary" tabindex="-1" hidden></div>
+        <p><label for="name">Name</label><br>
+          <input id="name" aria-required="true" aria-invalid="false" aria-describedby="e-name" autocomplete="name">
+          <span id="e-name" class="err"></span></p>
+        <p><label for="email">Email</label><br>
+          <input id="email" type="email" aria-required="true" aria-invalid="false" aria-describedby="e-email" autocomplete="email">
+          <span id="e-email" class="err"></span></p>
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+
+    <section class="card"><h3>Status message</h3>
+      <p>Uses role=status (polite live region), so no focus move is needed (SC 4.1.3).</p>
+      <button id="tb" type="button">Show status</button>
+    </section>
+
+    <section class="card"><h3>Sortable data table</h3>
+      <div class="scroll"><table id="dt">
+        <caption>Fruit stock (click a header to sort)</caption>
+        <thead><tr><th scope="col"><button type="button">Name</button></th><th scope="col"><button type="button">Qty</button></th></tr></thead>
+        <tbody><tr><td>Cherry</td><td>8</td></tr><tr><td>Apple</td><td>5</td></tr><tr><td>Banana</td><td>12</td></tr></tbody>
+      </table></div>
+    </section>
+
+    <section class="card"><h3>Keyboard event log</h3>
+      <p>Press keys anywhere. The log is intentionally not a live region (it would be noisy).</p>
+      <ol id="log" aria-label="Recent key events"></ol>
+    </section>
+  </section>
+
+  <!-- ============ MODULE 2 ============ -->
+  <section id="p2" role="tabpanel" aria-labelledby="t2" hidden>
+    <h2>Contrast &amp; Magnification Tester</h2>
+    <section class="card"><h3>Contrast checker</h3>
+      <div class="row">
+        <p><label for="fgh">Text color (hex)</label><br><input id="fgh" value="#767676" maxlength="7">
+          <label for="fg" class="sr">Text color picker</label><input id="fg" type="color" value="#767676"></p>
+        <p><label for="bgh">Background (hex)</label><br><input id="bgh" value="#ffffff" maxlength="7">
+          <label for="bg" class="sr">Background color picker</label><input id="bg" type="color" value="#ffffff"></p>
+      </div>
+      <p>Ratio: <strong id="ratio"></strong></p>
+      <ul id="res" class="plain"></ul>
+      <p id="pv" class="pv">Live preview: The quick brown fox (18px)</p>
+      <p><label for="tgt">Target</label>
+        <select id="tgt"><option value="4.5">4.5:1 (text AA)</option><option value="3">3:1 (large/UI)</option><option value="7">7:1 (AAA)</option></select>
+        <button id="sug" type="button">Suggest nearest passing color</button></p>
+      <p>Large text = at least 24px regular or 18.66px (14pt) bold.</p>
+    </section>
+
+    <section class="card"><h3>Magnification &amp; vision tests</h3>
+      <p>These act on the sample UI below. <strong>Simulation only.</strong> Also test with an OS magnifier, browser zoom, and NVDA/JAWS/VoiceOver.</p>
+      <p><label for="zm">Zoom (SC 1.4.4)</label> <input id="zm" type="range" min="100" max="400" step="25" value="100"> <output id="zo" for="zm">100%</output></p>
+      <p><button id="rf" type="button" aria-pressed="false">Reflow test, 320px (SC 1.4.10)</button>
+         <button id="tsp" type="button" aria-pressed="false">Text spacing (SC 1.4.12)</button></p>
+      <p><label for="cb">Color-blindness simulation</label>
+        <select id="cb"><option value="">None</option><option value="protan">Protanopia</option><option value="deutan">Deuteranopia</option><option value="tritan">Tritanopia</option><option value="achro">Achromatopsia</option></select></p>
+      <p id="mres" role="status"></p>
+      <p><button id="scan" type="button">Scan sample UI for contrast failures</button></p>
+      <div class="scroll"><table id="scanT"><caption>Contrast scan results</caption>
+        <thead><tr><th scope="col">UI</th><th scope="col">Element</th><th scope="col">Colors</th><th scope="col">Ratio</th><th scope="col">Needed</th><th scope="col">Suggested fix</th></tr></thead><tbody></tbody></table></div>
+      <div id="stage" class="stage"><div class="ui" id="sB" data-v="Before"></div><div class="ui" id="sA" data-v="After"></div></div>
+    </section>
+  </section>
+
+  <!-- ============ MODULE 3 ============ -->
+  <section id="p3" role="tabpanel" aria-labelledby="t3" hidden>
+    <h2>WCAG 2.1 Remediation Workshop</h2>
+    <p>The "Before" UI has 18 deliberate failures. Trap demo: if focus gets stuck in the search field, press Esc.</p>
+    <fieldset><legend>View</legend>
+      <label><input type="radio" name="vw" value="B"> Before</label>
+      <label><input type="radio" name="vw" value="A"> After</label>
+      <label><input type="radio" name="vw" value="S" checked> Side by side</label>
+    </fieldset>
+    <div id="wv" class="side"><div class="ui" id="wB" data-v="Before"></div><div class="ui" id="wA" data-v="After"></div></div>
+    <h3>Issue tracker</h3>
+    <p role="status" id="prog"></p>
+    <ol id="tr" class="plain"></ol>
+  </section>
+
+  <!-- ============ MODULE 4 ============ -->
+  <section id="p4" role="tabpanel" aria-labelledby="t4" hidden>
+    <h2>Audit Report &amp; Checklist</h2>
+    <p><strong>Honest note:</strong> automated tools (axe, Lighthouse, WAVE) catch only a portion of WCAG issues (commonly estimated around 30–40%). Manual testing is required.</p>
+    <details><summary>Test-method guide</summary><ul>
+      <li>Keyboard only: Tab/Shift+Tab, Enter, Space, arrows, Esc. Check order, focus visibility, traps.</li>
+      <li>Screen readers: NVDA with Firefox/Chrome, VoiceOver with Safari, TalkBack on Android.</li>
+      <li>Zoom: browser 200% and 400%, 320px width, OS magnifier.</li>
+      <li>Contrast: WebAIM checker, browser DevTools, this lab.</li>
+      <li>Automated: axe DevTools, Lighthouse, WAVE. Treat as a starting point.</li></ul></details>
+    <form id="ck"></form>
+    <p><button id="gen" type="button">Generate report</button> <button id="cp" type="button">Copy report as text</button> <button id="pr" type="button">Print</button></p>
+    <div id="rep" tabindex="-1"></div>
+  </section>
+</main>
+
+<footer><p>A11y Lab is a learning aid. It does not replace testing with real assistive technology.</p></footer>
+
+<div id="ov" class="overlay" hidden>
+  <div id="dlg" role="dialog" aria-modal="true" aria-labelledby="dt-h" aria-describedby="dt-d">
+    <h2 id="dt-h">Confirm action</h2><p id="dt-d">Focus is trapped here. Press Esc to close.</p>
+    <button id="cl" type="button">Close</button> <button type="button">Confirm</button>
+  </div>
+</div>
+<div id="toast" role="status" class="toast"></div>
+
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute"><defs>
+<filter id="protan"><feColorMatrix type="matrix" values="0.567 0.433 0 0 0 0.558 0.442 0 0 0 0 0.242 0.758 0 0 0 0 0 1 0"/></filter>
+<filter id="deutan"><feColorMatrix type="matrix" values="0.625 0.375 0 0 0 0.7 0.3 0 0 0 0 0.3 0.7 0 0 0 0 0 1 0"/></filter>
+<filter id="tritan"><feColorMatrix type="matrix" values="0.95 0.05 0 0 0 0 0.433 0.567 0 0 0 0.475 0.525 0 0 0 0 0 1 0"/></filter>
+<filter id="achro"><feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0 0.299 0.587 0.114 0 0 0.299 0.587 0.114 0 0 0 0 0 1 0"/></filter>
+</defs></svg>
+
+<script src="js/main.js?v=3"></script>
+<script src="js/workshop.js?v=3"></script>
+<script src="js/contrast.js?v=3"></script>
+<script src="js/audit.js?v=3"></script>
+<script src="js/theme.js?v=3"></script>
+</body>
+</html>
